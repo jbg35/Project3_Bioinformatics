@@ -17,11 +17,15 @@ import sys
 
 
 def preprocess(filepath):
+    # Writes a new file name for the resulting preprocessed file, to keep it separate from the original
     newfilepath = filepath[:9] + "new_" + filepath[9:]
 
+    # open original and new file for read and write privileges
     file = open(filepath, "r+")
     newfile = open(newfilepath, "w+")
 
+    # remove genes with "endogenous control" in the name
+    # https://stackoverflow.com/questions/11968998/remove-lines-that-contain-certain-string
     for line in file:
         if "endogenous control" not in line:
             newfile.write(line)
