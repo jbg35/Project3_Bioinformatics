@@ -16,8 +16,15 @@ import sys
 # values into a file. The file should look like the following:
 
 
-trainAMLALL = open("Datasets\ALL_vs_AML_train_set_38_sorted.res", "r+")
-print(trainAMLALL.read())
+def preprocess(filepath):
+    file = open(filepath, "r+")
+    print(file.read(11))
+    file.close()
 
-trainAMLALL.close()
 
+trainData = "Datasets\ALL_vs_AML_train_set_38_sorted.res"
+testData = "Datasets\Leuk_ALL_AML.test.res"
+
+preprocess(trainData)
+
+preprocess(testData)
