@@ -17,14 +17,21 @@ import sys
 
 
 def preprocess(filepath):
+    newfilepath = filepath[:9] + "new_" + filepath[9:]
+
     file = open(filepath, "r+")
-    print(file.read(11))
+    newfile = open(newfilepath, "w+")
+
+    for line in file:
+        if "endogenous control" not in line:
+            newfile.write(line)
+
     file.close()
+    newfile.close()
 
 
 trainData = "Datasets\ALL_vs_AML_train_set_38_sorted.res"
 testData = "Datasets\Leuk_ALL_AML.test.res"
 
 preprocess(trainData)
-
-preprocess(testData)
+#preprocess(testData)
