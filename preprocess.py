@@ -14,4 +14,10 @@ import sys
 #
 # 5) Save the Affymetrics ID of the genes and its expression 
 # values into a file. The file should look like the following:
-def readFile():
+
+
+trainAMLALL = open("Datasets\ALL_vs_AML_train_set_38_sorted.res", "r+")
+print(trainAMLALL.read())
+
+trainAMLALL.close()
+
