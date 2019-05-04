@@ -1,5 +1,6 @@
 So, I kinda wish github had some kind of chat. Got some preprocess stuff done. If you could test it on your machines to make sure it works that'd be cool. I'm done for tonight and will be working on this most of tomorrow (we can try to get it done tomorrow so we have Sunday to finish presentation and personal reports).
 
+The selection kinda works but it write the file weirdly. So I just ended up hand copying over the top 50 from the ttest.
 
 # Project3_Bioinformatics
 * A project on microarray data analysis
