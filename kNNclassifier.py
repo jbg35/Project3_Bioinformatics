@@ -36,3 +36,16 @@ while('' in leuk_data) :
 for i in range(len(leuk_data)):
 	leuk_data[i] = int(leuk_data[i])
 
+top50 = pd.read_csv('testoutputTop50Ascending.csv')
+top50 = top50.drop(columns=['Accession', 'P-VALUE\n'])
+top50 = top50.transpose()
+features = list(top50)
+top50['label'] = data
+print(top50)
+
+leuk_test = pd.read_csv('leukoutput.csv')
+leuk_test = leuk_test.drop(columns=['Accession', '\n'])
+leuk_test = leuk_test.transpose()
+testing = list(leuk_test)
+leuk_test['label'] = leuk_data
+print(leuk_test)
