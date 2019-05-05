@@ -40,7 +40,7 @@ for i in range(len(leuk_vector)):
 #print(leuk_vector)
 
 top50 = pd.read_csv('testoutputTop50Ascending.csv')
-top50 = top50.drop(columns=['Accession', 'P-VALUE\n'])
+top50 = top50.drop(columns=['Accession', 'P-VALUE\n'], axis=1)
 top50 = top50.transpose()
 features = list(top50)
 top50['FEATURE'] = training_vector
@@ -48,21 +48,21 @@ top50['FEATURE'] = training_vector
 
 leuk_test = pd.read_csv('LEUK_TOP50.csv')
 
-leuk_test = leuk_test.drop(columns=['Accession'])
+leuk_test = leuk_test.drop(columns=['Accession'],axis=1)
 leuk_test = leuk_test.transpose()
 testing = list(leuk_test)
 leuk_test['FEATURE'] = leuk_vector
 
 
 train = top50[features]
-leuk_vec = top50['FEATURE']
+train_vec = top50['FEATURE']
 leuk_ = leuk_test[features]
 
 knn = KNeighborsClassifier(algorithm='auto', leaf_size=30,
                            metric='minkowski', metric_params=None, n_jobs=1,
                            n_neighbors=1, p=2, weights='uniform')
 
-knn.fit(train, leuk_vec)
+knn.fit(train, train_vec)
 PREDICTION = knn.predict(train)
 PREDICTION2 = knn.predict(leuk_)
 print('PREDCTION USING ORIGINAL VALUES')
