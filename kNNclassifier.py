@@ -3,6 +3,8 @@ import sys
 import pandas as pd 
 import numpy as np
 import csv
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -42,57 +44,29 @@ top50 = top50.drop(columns=['Accession', 'P-VALUE\n'])
 top50 = top50.transpose()
 features = list(top50)
 top50['FEATURE'] = training_vector
-#print(top50)
 
-leuk_test = pd.read_csv('leukoutput.csv')
-leuk_test = leuk_test.drop(columns=['Accession', '\n'])
+
+leuk_test = pd.read_csv('LEUK_TOP50.csv')
+
+leuk_test = leuk_test.drop(columns=['Accession'])
 leuk_test = leuk_test.transpose()
 testing = list(leuk_test)
 leuk_test['FEATURE'] = leuk_vector
 
+
 train = top50[features]
-
+leuk_vec = top50['FEATURE']
 leuk_ = leuk_test[features]
-
 
 knn = KNeighborsClassifier(algorithm='auto', leaf_size=30,
                            metric='minkowski', metric_params=None, n_jobs=1,
                            n_neighbors=1, p=2, weights='uniform')
 
-knn.fit(train, training_vector)
+knn.fit(train, leuk_vec)
+PREDICTION = knn.predict(train)
+PREDICTION2 = knn.predict(leuk_)
+print('PREDCTION USING ORIGINAL VALUES')
+print(PREDICTION)
+print('PREDICTION USING TESTING VALUES')
+print(PREDICTION2)
 
-print(knn.predict(train))
-print(training_vector)
-
-print(knn.predict(leuk_))
-print(leuk_vector)
-
-
-
-
-
-# train_predicted = knn.predict(train)
-
-# print("\n___ KNN CLASSIFICATION RESULTS ___\n")
-
-# print("\nTraining Predictions: ", train_predicted)
-# print("Test Accuracy:", accuracy_score(train_labels, train_predicted))
-
-# test_predicted = knn.predict(leuk_)
-
-# print("\nTest Predictions:", test_predicted)
-# print("Test Accuracy:", accuracy_score(leuk_labels, test_predicted))
-
-# print("\n")
-
-# print("___ DECISION TREE CLASSIFICATION RESULTS ___\n")
-
-# c = tree.DecisionTreeClassifier(min_samples_split=2)
-
-# dt = c.fit(train, train_labels)
-
-# y_pred = dt.predict(leuk_)
-
-# print("Test Predictions: ", y_pred)
-# print("Test Accuracy:", accuracy_score(leuk_labels, y_pred))
-# print("\n")
