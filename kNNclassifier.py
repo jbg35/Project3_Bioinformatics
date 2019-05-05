@@ -21,54 +21,78 @@ from sklearn import tree
 # 8.     Report your results. 
 
 with open("ALL_vs_AML_train_set_38_sorted.cls", "r", newline='') as csvfile:
-    train_labels = list(csv.reader(csvfile, delimiter = ' '))
-train_labels = train_labels[1]
-while('' in train_labels) : 
-    train_labels.remove('') 
-for i in range(len(train_labels)):
-	train_labels[i] = int(train_labels[i])
-
+    training_vector = list(csv.reader(csvfile, delimiter = ' '))
+training_vector = training_vector[1]
+while('' in training_vector) : 
+    training_vector.remove('') 
+for i in range(len(training_vector)):
+	training_vector[i] = int(training_vector[i])
+#print(training_vector)
 with open("Leuk_ALL_AML.test.cls", "r", newline='') as csvfile:
-    leuk_labels = list(csv.reader(csvfile, delimiter = ' '))
-leuk_labels = leuk_labels[1]
-while('' in leuk_labels) : 
-    leuk_labels.remove('') 
-for i in range(len(leuk_labels)):
-	leuk_labels[i] = int(leuk_labels[i])
+    leuk_vector = list(csv.reader(csvfile, delimiter = ' '))
+leuk_vector = leuk_vector[1]
+while('' in leuk_vector) : 
+    leuk_vector.remove('') 
+for i in range(len(leuk_vector)):
+	leuk_vector[i] = int(leuk_vector[i])
+#print(leuk_vector)
 
 top50 = pd.read_csv('testoutputTop50Ascending.csv')
 top50 = top50.drop(columns=['Accession', 'P-VALUE\n'])
 top50 = top50.transpose()
 features = list(top50)
-top50['FEATURE'] = train_labels
+top50['FEATURE'] = training_vector
 #print(top50)
 
 leuk_test = pd.read_csv('leukoutput.csv')
 leuk_test = leuk_test.drop(columns=['Accession', '\n'])
 leuk_test = leuk_test.transpose()
 testing = list(leuk_test)
-leuk_test['FEATURE'] = leuk_labels
+leuk_test['FEATURE'] = leuk_vector
 
 train = top50[features]
-train_labels = top50['FEATURE']
 
 leuk_ = leuk_test[features]
-leuk_labels = leuk_test['FEATURE']
+
 
 knn = KNeighborsClassifier(algorithm='auto', leaf_size=30,
                            metric='minkowski', metric_params=None, n_jobs=1,
                            n_neighbors=1, p=2, weights='uniform')
 
-knn.fit(train, train_labels)
-print(knn.predict(train))
+knn.fit(train, training_vector)
 
-# checking classifier
-print("Predictions for train data:")
 print(knn.predict(train))
-print("Target values for train:")
-print(train_labels)
-# using the classifier
-print("Predictions from the classifier for test:")
+print(training_vector)
+
 print(knn.predict(leuk_))
-print("Target values for test:")
-print(leuk_labels)
+print(leuk_vector)
+
+
+
+
+
+# train_predicted = knn.predict(train)
+
+# print("\n___ KNN CLASSIFICATION RESULTS ___\n")
+
+# print("\nTraining Predictions: ", train_predicted)
+# print("Test Accuracy:", accuracy_score(train_labels, train_predicted))
+
+# test_predicted = knn.predict(leuk_)
+
+# print("\nTest Predictions:", test_predicted)
+# print("Test Accuracy:", accuracy_score(leuk_labels, test_predicted))
+
+# print("\n")
+
+# print("___ DECISION TREE CLASSIFICATION RESULTS ___\n")
+
+# c = tree.DecisionTreeClassifier(min_samples_split=2)
+
+# dt = c.fit(train, train_labels)
+
+# y_pred = dt.predict(leuk_)
+
+# print("Test Predictions: ", y_pred)
+# print("Test Accuracy:", accuracy_score(leuk_labels, y_pred))
+# print("\n")
