@@ -5,10 +5,11 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn import tree
+from sklearn import tree, neighbors, datasets
 
 
 # 6.     Write a computer program (Python/C++/Java) to implement the kNN classifier. Each group could choice your own favorite distance measures and values for the parameters involved in kNN. For example:
@@ -40,15 +41,14 @@ for i in range(len(leuk_vector)):
 #print(leuk_vector)
 
 top50 = pd.read_csv('testoutputTop50Ascending.csv')
-top50 = top50.drop(columns=['Accession', 'P-VALUE\n'], axis=1)
+top50 = top50.drop(columns=['Accession', 'P-VALUE\n'], axis=0)
 top50 = top50.transpose()
 features = list(top50)
 top50['FEATURE'] = training_vector
 
-
 leuk_test = pd.read_csv('LEUK_TOP50.csv')
 
-leuk_test = leuk_test.drop(columns=['Accession'],axis=1)
+leuk_test = leuk_test.drop(columns=['Accession'],axis=0)
 leuk_test = leuk_test.transpose()
 testing = list(leuk_test)
 leuk_test['FEATURE'] = leuk_vector
@@ -57,6 +57,7 @@ leuk_test['FEATURE'] = leuk_vector
 train = top50[features]
 train_vec = top50['FEATURE']
 leuk_ = leuk_test[features]
+leuk_vec = leuk_test['FEATURE']
 
 knn = KNeighborsClassifier(algorithm='auto', leaf_size=30,
                            metric='minkowski', metric_params=None, n_jobs=1,
@@ -68,5 +69,9 @@ PREDICTION2 = knn.predict(leuk_)
 print('PREDCTION USING ORIGINAL VALUES')
 print(PREDICTION)
 print('PREDICTION USING TESTING VALUES')
-print(PREDICTION2)
-
+print(PREDICTION2,'\n')
+# this is just showing that the training values were correct. 
+# a score of 1.0 means that the knn.fit() worked properly
+print('Accuracy of predicted training values: ', accuracy_score(train_vec,PREDICTION))
+# this is the accuracy of the prediction compared to the actual values
+print('Accuracy of predicted testing values: ', accuracy_score(leuk_vec,PREDICTION2))
