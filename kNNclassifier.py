@@ -21,31 +21,54 @@ from sklearn import tree
 # 8.     Report your results. 
 
 with open("ALL_vs_AML_train_set_38_sorted.cls", "r", newline='') as csvfile:
-    data = list(csv.reader(csvfile, delimiter = ' '))
-data = data[1]
-while('' in data) : 
-    data.remove('') 
-for i in range(len(data)):
-	data[i] = int(data[i])
+    train_labels = list(csv.reader(csvfile, delimiter = ' '))
+train_labels = train_labels[1]
+while('' in train_labels) : 
+    train_labels.remove('') 
+for i in range(len(train_labels)):
+	train_labels[i] = int(train_labels[i])
 
 with open("Leuk_ALL_AML.test.cls", "r", newline='') as csvfile:
-    leuk_data = list(csv.reader(csvfile, delimiter = ' '))
-leuk_data = leuk_data[1]
-while('' in leuk_data) : 
-    leuk_data.remove('') 
-for i in range(len(leuk_data)):
-	leuk_data[i] = int(leuk_data[i])
+    leuk_labels = list(csv.reader(csvfile, delimiter = ' '))
+leuk_labels = leuk_labels[1]
+while('' in leuk_labels) : 
+    leuk_labels.remove('') 
+for i in range(len(leuk_labels)):
+	leuk_labels[i] = int(leuk_labels[i])
 
 top50 = pd.read_csv('testoutputTop50Ascending.csv')
 top50 = top50.drop(columns=['Accession', 'P-VALUE\n'])
 top50 = top50.transpose()
 features = list(top50)
-top50['label'] = data
-print(top50)
+top50['FEATURE'] = train_labels
+#print(top50)
 
 leuk_test = pd.read_csv('leukoutput.csv')
 leuk_test = leuk_test.drop(columns=['Accession', '\n'])
 leuk_test = leuk_test.transpose()
 testing = list(leuk_test)
-leuk_test['label'] = leuk_data
-print(leuk_test)
+leuk_test['FEATURE'] = leuk_labels
+
+train = top50[features]
+train_labels = top50['FEATURE']
+
+leuk_ = leuk_test[features]
+leuk_labels = leuk_test['FEATURE']
+
+knn = KNeighborsClassifier(algorithm='auto', leaf_size=30,
+                           metric='minkowski', metric_params=None, n_jobs=1,
+                           n_neighbors=1, p=2, weights='uniform')
+
+knn.fit(train, train_labels)
+print(knn.predict(train))
+
+# checking classifier
+print("Predictions for train data:")
+print(knn.predict(train))
+print("Target values for train:")
+print(train_labels)
+# using the classifier
+print("Predictions from the classifier for test:")
+print(knn.predict(leuk_))
+print("Target values for test:")
+print(leuk_labels)
